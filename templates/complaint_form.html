@@ -1,38 +1,143 @@
 {% extends "base.html" %}
 {% block title %}Submit Complaint - SmartHostel{% endblock %}
 {% block content %}
-<div class="form-page">
-    <div class="form-card fade-in">
-        <h2><i class="fas fa-pen-to-square"></i> Submit Complaint</h2>
-        <form method="POST">
-            <div class="form-group">
-                <label><i class="fas fa-heading"></i> Title *</label>
-                <input type="text" name="title" required placeholder="Brief complaint title">
-            </div>
-            <div class="form-group">
-                <label><i class="fas fa-tags"></i> Category</label>
-                <select name="category">
-                    <option value="carpenter">🪚 Carpenter</option>
-                    <option value="plumber">💧 Plumber</option>
-                    <option value="electrician">🔌 Electrician</option>
-                    <option value="wifi">📡 WiFi</option>
-                    <option value="laundry">🧺 Laundry</option>
-                    <option value="food">🍽️ Food</option>
-                    <option value="security">🔒 Security</option>
-                    <option value="cleanliness">🧹 Cleanliness</option>
-                    <option value="other">📎 Other</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label><i class="fas fa-align-left"></i> Description *</label>
-                <textarea name="description" rows="5" required
-                    placeholder="Describe your complaint in detail..."></textarea>
-            </div>
-            <div class="form-actions">
-                <a href="{{ url_for('complaint.list_complaints') }}" class="btn-outline">Cancel</a>
-                <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Submit</button>
-            </div>
-        </form>
+<style>
+.cute-complaint-form {
+    max-width: 600px;
+    margin: 2rem auto;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 2px dashed var(--abode-lavender);
+    border-radius: 30px;
+    padding: 2.5rem;
+    box-shadow: 0 15px 35px rgba(236,72,153,0.1);
+}
+.cute-complaint-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.cute-complaint-header h2 {
+    color: var(--text-dark);
+    font-weight: 800;
+}
+.cute-complaint-header p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-top: 0.25rem;
+}
+.cute-form-group {
+    margin-bottom: 1.5rem;
+}
+.cute-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    color: var(--text-2);
+    font-size: 0.95rem;
+}
+.cute-label i {
+    margin-right: 0.4rem;
+}
+.cute-input, .cute-select, .cute-textarea {
+    width: 100%;
+    padding: 0.85rem 1.2rem;
+    border-radius: 20px;
+    border: 2px solid var(--border);
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    background: #fff;
+    color: var(--text-dark);
+}
+.cute-input:focus, .cute-select:focus, .cute-textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(236,72,153,0.1);
+}
+.cute-textarea {
+    resize: vertical;
+    border-radius: 16px;
+}
+.cute-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.cute-btn-cancel {
+    padding: 0.85rem 1.7rem;
+    border-radius: 22px;
+    border: 2px solid var(--border);
+    background: transparent;
+    color: var(--text-3);
+    font-weight: 700;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+.cute-btn-cancel:hover {
+    background: var(--bg);
+    color: var(--text-dark);
+}
+.cute-btn-submit {
+    padding: 0.85rem 1.9rem;
+    border-radius: 22px;
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.05rem;
+    box-shadow: 0 6px 20px rgba(236,72,153,0.3);
+    transition: all 0.2s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.cute-btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(236,72,153,0.4);
+}
+</style>
+
+<div class="cute-complaint-form fade-in">
+    <div class="cute-complaint-header">
+        <h2><i class="fas fa-pen-to-square" style="color:var(--abode-mint);"></i> Submit Complaint</h2>
+        <p>Let us know what needs fixing</p>
     </div>
+    
+    <form method="POST">
+        <div class="cute-form-group">
+            <label class="cute-label"><i class="fas fa-heading" style="color:var(--abode-lavender);"></i> Title *</label>
+            <input type="text" name="title" class="cute-input" required placeholder="e.g., Leaking tap in bathroom">
+        </div>
+        
+        <div class="cute-form-group">
+            <label class="cute-label"><i class="fas fa-tags" style="color:var(--abode-pink);"></i> Category</label>
+            <select name="category" class="cute-select">
+                <option value="carpenter">🪚 Carpenter</option>
+                <option value="plumber">💧 Plumber</option>
+                <option value="electrician">🔌 Electrician</option>
+                <option value="wifi">📡 WiFi</option>
+                <option value="laundry">🧺 Laundry</option>
+                <option value="food">🍽️ Food</option>
+                <option value="security">🔒 Security</option>
+                <option value="cleanliness">🧹 Cleanliness</option>
+                <option value="other">📎 Other</option>
+            </select>
+        </div>
+        
+        <div class="cute-form-group">
+            <label class="cute-label"><i class="fas fa-align-left" style="color:var(--orange-text);"></i> Description *</label>
+            <textarea name="description" rows="5" class="cute-textarea" required
+                placeholder="Please describe the issue in detail so we can help quickly..."></textarea>
+        </div>
+        
+        <div class="cute-actions">
+            <a href="{{ url_for('complaint.list_complaints') }}" class="cute-btn-cancel">Cancel</a>
+            <button type="submit" class="cute-btn-submit"><i class="fas fa-paper-plane" style="margin-right:6px;"></i> Submit</button>
+        </div>
+    </form>
 </div>
 {% endblock %}

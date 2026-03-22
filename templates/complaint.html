@@ -11,8 +11,27 @@
     {% endif %}
 </div>
 
-{% if role == 'warden' %}
 {% if complaints %}
+<!-- Filter Toolbar -->
+<div class="dash-section fade-in" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: center; border-radius: 16px; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border: 1.5px dashed var(--abode-lavender);">
+    <i class="fas fa-filter" style="color:var(--primary);"></i> <strong style="color:var(--text-dark); font-size: 0.95rem;">Filter by:</strong>
+    <select id="categoryFilter" onchange="filterComplaints()" class="select-sm" style="border: 2px solid var(--border); padding: 0.5rem 1rem; border-radius: 20px; font-family: inherit; font-size: 0.85rem; font-weight: 600; color: var(--text-2); cursor: pointer; outline: none; transition: 0.2s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+        <option value="">All Categories</option>
+        <option value="plumber">Plumber</option>
+        <option value="electrician">Electrician</option>
+        <option value="carpenter">Carpenter</option>
+        <option value="wifi">WiFi</option>
+        <option value="other">Other</option>
+    </select>
+    <select id="statusFilter" onchange="filterComplaints()" class="select-sm" style="border: 2px solid var(--border); padding: 0.5rem 1rem; border-radius: 20px; font-family: inherit; font-size: 0.85rem; font-weight: 600; color: var(--text-2); cursor: pointer; outline: none; transition: 0.2s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+        <option value="">All Statuses</option>
+        <option value="pending">Pending</option>
+        <option value="in_progress">In Progress</option>
+        <option value="resolved">Resolved</option>
+        <option value="unresolved">Unresolved</option>
+    </select>
+</div>
+
 <div class="table-wrapper fade-in">
     <table class="data-table">
         <thead>
@@ -28,7 +47,7 @@
         </thead>
         <tbody>
             {% for c in complaints %}
-            <tr>
+            <tr class="complaint-row" data-category="{{ c.category|lower }}" data-status="{{ c.status|lower }}">
                 {% if role == 'warden' %}
                 <td>{{ c.full_name }}</td>
                 <td>{{ c.room_number }}</td>
@@ -77,5 +96,41 @@
     <div class="empty-icon"><i class="fas fa-inbox" style="color:var(--text-muted)"></i></div>
     <p>No complaints found.</p>
 </div>
+</div>
 {% endif %}
+
+<script>
+function filterComplaints() {
+    const category = document.getElementById('categoryFilter').value.toLowerCase();
+    const status = document.getElementById('statusFilter').value.toLowerCase();
+    const rows = document.querySelectorAll('.complaint-row');
+
+    let visibleCount = 0;
+    rows.forEach(row => {
+        const catMatch = category === '' || row.dataset.category.includes(category);
+        const statMatch = status === '' || row.dataset.status.includes(status);
+        if (catMatch && statMatch) {
+            row.style.display = '';
+            visibleCount++;
+        } else {
+            row.style.display = 'none';
+        }
+    });
+
+    // Optional: display "no matches" if all filtered out
+    let emptyRow = document.getElementById('empty-filter-row');
+    if (visibleCount === 0 && rows.length > 0) {
+        if (!emptyRow) {
+            emptyRow = document.createElement('tr');
+            emptyRow.id = 'empty-filter-row';
+            emptyRow.innerHTML = `<td colspan="7" style="text-align:center; padding: 2rem; color: var(--text-muted);"><i class="fas fa-search"></i> No complaints match your selected filters.</td>`;
+            document.querySelector('.data-table tbody').appendChild(emptyRow);
+        } else {
+            emptyRow.style.display = '';
+        }
+    } else if (emptyRow) {
+        emptyRow.style.display = 'none';
+    }
+}
+</script>
 {% endblock %}

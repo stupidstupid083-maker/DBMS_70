@@ -10,7 +10,7 @@
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
         <div>
           <h1 style="font-size:1.75rem; font-weight:900; letter-spacing:-0.03em;">Today's Menu 🍽️</h1>
-          <p style="font-size:0.88rem; color:var(--abode-text-muted); margin-top:0.25rem; font-weight:500;">
+          <p style="font-size:0.88rem; color:var(--text-3); margin-top:0.25rem; font-weight:500;">
             Fresh, nutritious meals served every day 🌿
           </p>
         </div>
@@ -26,8 +26,8 @@
     <div class="abode-meal-cards">
 
       {# Breakfast #}
-      <div class="abode-meal-card breakfast fade-in fade-in-1">
-        <span class="abode-meal-icon">☀️</span>
+      <div class="abode-meal-card breakfast fade-in fade-in-1" style="background:var(--abode-beige);">
+        <span class="abode-meal-icon sticker-interact">🧋</span>
         <div class="abode-meal-name">Breakfast</div>
         {% for day, meals in weekly_menu.items() %}{% if loop.first %}
           {% set b = meals.get('Breakfast', {}) %}
@@ -37,8 +37,8 @@
       </div>
 
       {# Lunch #}
-      <div class="abode-meal-card lunch fade-in fade-in-2">
-        <span class="abode-meal-icon">🌤️</span>
+      <div class="abode-meal-card lunch fade-in fade-in-2" style="background:var(--abode-mint);">
+        <span class="abode-meal-icon sticker-interact">🍛</span>
         <div class="abode-meal-name">Lunch</div>
         {% for day, meals in weekly_menu.items() %}{% if loop.first %}
           {% set l = meals.get('Lunch', {}) %}
@@ -48,8 +48,8 @@
       </div>
 
       {# Snacks #}
-      <div class="abode-meal-card snacks fade-in fade-in-3">
-        <span class="abode-meal-icon">🍪</span>
+      <div class="abode-meal-card snacks fade-in fade-in-3" style="background:var(--abode-pink);">
+        <span class="abode-meal-icon sticker-interact">🍔</span>
         <div class="abode-meal-name">Snacks</div>
         {% for day, meals in weekly_menu.items() %}{% if loop.first %}
           {% set s = meals.get('Snacks', {}) %}
@@ -59,8 +59,8 @@
       </div>
 
       {# Dinner #}
-      <div class="abode-meal-card dinner fade-in fade-in-4">
-        <span class="abode-meal-icon">🌙</span>
+      <div class="abode-meal-card dinner fade-in fade-in-4" style="background:var(--abode-lavender);">
+        <span class="abode-meal-icon sticker-interact">🍕</span>
         <div class="abode-meal-name">Dinner</div>
         {% for day, meals in weekly_menu.items() %}{% if loop.first %}
           {% set d = meals.get('Dinner', {}) %}
@@ -73,7 +73,7 @@
 
     {# ── Full weekly menu table ── #}
     <div style="margin-top:1.5rem; margin-bottom:1rem; position:relative; overflow:hidden;" class="fade-in">
-      <h2 style="font-size:1.15rem; font-weight:800; color:var(--abode-text); letter-spacing:-0.02em;">
+      <h2 style="font-size:1.15rem; font-weight:800; color:var(--text); letter-spacing:-0.02em;">
         📆 Weekly Schedule
       </h2>
 
@@ -83,13 +83,13 @@
       <div class="menu-sticker" style="bottom: 10px; right: 5%; animation-delay: 2s;">🍛</div>
     </div>
 
-    <div style="background:white; border:var(--abode-border); border-radius:20px; padding:1.5rem; box-shadow:var(--abode-shadow); overflow-x:auto;" class="fade-in fade-in-2">
+    <div style="background:white; border:1px solid var(--border); border-radius:20px; padding:1.5rem; box-shadow:var(--shadow-sm); overflow-x:auto;" class="fade-in fade-in-2">
       <table class="abode-data-table" style="border-collapse: separate; border-spacing: 0;">
         <thead>
           <tr>
-            <th style="min-width:110px; border-bottom:var(--abode-border); padding:1rem;"><i class="fas fa-calendar-days"></i> Day</th>
+            <th style="min-width:110px; border-bottom:1px solid var(--border); padding:1rem;"><i class="fas fa-calendar-days"></i> Day</th>
             {% for meal in meal_names %}
-            <th style="min-width:140px; border-bottom:var(--abode-border); padding:1rem;">
+            <th style="min-width:140px; border-bottom:1px solid var(--border); padding:1rem;">
               {% if meal == 'Breakfast' %}☀️
               {% elif meal == 'Lunch' %}🌤️
               {% elif meal == 'Snacks' %}🍪
@@ -103,19 +103,19 @@
         <tbody>
           {% for day in day_names %}
           <tr>
-            <td style="font-weight:700; background:var(--abode-subtle); border-bottom:1px solid #eee; padding:1rem;">{{ day }}</td>
+            <td style="font-weight:700; background:var(--bg); border-bottom:1px solid #F0E5E9; padding:1rem;">{{ day }}</td>
             {% for meal in meal_names %}
             {% set cell = weekly_menu.get(day, {}).get(meal, {}) %}
-            <td style="border-bottom:1px solid #eee; padding:1rem;">
+            <td style="border-bottom:1px solid #F0E5E9; padding:1rem;">
               {% if cell and cell['items'] != 'Not set' %}
-              <div style="font-size:0.88rem; font-weight:600; color:var(--abode-text); margin-bottom:0.25rem;">{{ cell['items'] }}</div>
+              <div style="font-size:0.88rem; font-weight:600; color:var(--text); margin-bottom:0.25rem;">{{ cell['items'] }}</div>
               {% if cell['calories'] %}
-              <div style="font-size:0.75rem; font-weight:700; color:var(--abode-text-muted);">
+              <div style="font-size:0.75rem; font-weight:700; color:var(--text-3);">
                 <span style="color:#F59E0B">🔥</span> {{ cell['calories'] }} kcal
               </div>
               {% endif %}
               {% else %}
-              <span style="font-size:0.8rem; color:var(--abode-text-muted); opacity:0.5;">-</span>
+              <span style="font-size:0.8rem; color:var(--text-3); opacity:0.5;">-</span>
               {% endif %}
             </td>
             {% endfor %}
@@ -127,4 +127,61 @@
 
   </div>{# /abode-menu-content #}
 </div>{# /abode-menu-page #}
+
+<style>
+.abode-meal-card {
+  flex: 1;
+  min-width: 140px;
+  padding: 1rem;
+  border-radius: 20px;
+  border: 3px solid var(--border-2);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+
+.abode-meal-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+}
+
+.abode-meal-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-top: 0.4rem;
+  margin-bottom: 0.2rem;
+}
+
+.abode-meal-icon {
+  font-size: 2.5rem;
+  display: inline-block;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.abode-meal-card:hover .sticker-interact, 
+.sticker-interact:hover {
+  animation: playfulPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes playfulPop {
+  0% { transform: scale(1) translateY(0) rotate(0); }
+  40% { transform: scale(1.3) translateY(-10px) rotate(-10deg); }
+  70% { transform: scale(1.1) translateY(-2px) rotate(5deg); }
+  100% { transform: scale(1.2) translateY(-5px) rotate(0); }
+}
+
+/* Ensure the grid wraps nicely */
+.abode-meal-cards {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+</style>
+
 {% endblock %}

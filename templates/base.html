@@ -156,27 +156,6 @@
 </div>{# /landing #}
 {% endif %}
 
-{% if session.user_id and session.role == 'student' %}
-    <!-- Student Bottom Navigation -->
-    <nav class="abode-bottom-nav">
-        <a href="{{ url_for('student.dashboard') }}" class="abode-nav-item {% if request.endpoint == 'student.dashboard' %}active{% endif %}">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </a>
-        <a href="{{ url_for('roommate.swipe') }}" class="abode-nav-item {% if 'roommate' in (request.endpoint or '') %}active{% endif %}">
-            <i class="fas fa-heart"></i>
-            <span>Match</span>
-        </a>
-        <a href="{{ url_for('menu.view_menu') }}" class="abode-nav-item {% if 'menu' in (request.endpoint or '') %}active{% endif %}">
-            <i class="fas fa-utensils"></i>
-            <span>Menu</span>
-        </a>
-        <a href="{{ url_for('notification.view') }}" class="abode-nav-item {% if 'notification' in (request.endpoint or '') %}active{% endif %}">
-            <i class="fas fa-bell"></i>
-            <span>Alerts</span>
-        </a>
-    </nav>
-{% endif %}
 
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>

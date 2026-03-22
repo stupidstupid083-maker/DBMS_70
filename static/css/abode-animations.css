@@ -4,18 +4,13 @@
    ============================================================ */
 
 :root {
-  --abode-pink:     #F9A8D4;
-  --abode-mint:     #86EFAC;
-  --abode-lavender: #C084FC;
-  --abode-beige:    #FDE68A;
-  --abode-blue-soft: #93C5FD;
-  
+  /* Inherits pastel colors from style.css */
   --abode-bg:       #FFFFFF;
   --abode-text:     #1A1A1A;
-  --abode-text-muted: #8A7A9A;
-  --abode-border:   2px solid #1A1A1A;
-  --abode-shadow:   4px 4px 0px rgba(0,0,0,0.1);
-  --abode-shadow-active: 2px 2px 0px rgba(0,0,0,0.15);
+  --abode-text-muted: #888888;
+  --abode-border:   none; /* Removing thick border for softer look */
+  --abode-shadow:   0 10px 30px rgba(0,0,0,0.06);
+  --abode-shadow-active: 0 4px 15px rgba(0,0,0,0.08);
 }
 
 /* ── Global Typography ─────────────────────────────────────── */
@@ -32,47 +27,76 @@ h1, h2, h3, h4 {
   letter-spacing: -0.02em;
 }
 
-/* ── Neo-Brutalism Cards ───────────────────────────────────── */
+/* ── Neo-Brutalism Cards -> Soft Layered Cards ───────────────────────────────────── */
 .abode-feature-card {
-  padding: 1.5rem;
+  padding: 1.25rem;
   border-radius: 20px;
-  border: var(--abode-border);
-  box-shadow: var(--abode-shadow);
-  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   overflow: hidden;
-  cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  color: #1a1a1a;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  z-index: 1;
 }
 
 .abode-feature-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px rgba(0,0,0,0.12);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  z-index: 10 !important;
 }
 
-.abode-feature-card.pink     { background-color: var(--abode-pink); }
-.abode-feature-card.mint     { background-color: var(--abode-mint); }
-.abode-feature-card.lavender { background-color: var(--abode-lavender); }
-.abode-feature-card.beige    { background-color: var(--abode-beige); }
-.abode-feature-card.blue-soft { background-color: var(--abode-blue-soft); }
+/* Dashboard Grid Layout Help */
+.abode-dash-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  padding-bottom: 2.5rem;
+}
+
+.abode-dash-grid > a {
+  text-decoration: none;
+}
+
+@media (max-width: 992px) {
+  .abode-dash-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .abode-dash-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.abode-feature-card.pink     { background-color: rgba(236, 72, 153, 0.12); }
+.abode-feature-card.mint     { background-color: rgba(223, 245, 225, 0.5); }
+.abode-feature-card.lavender { background-color: rgba(230, 214, 255, 0.5); }
+.abode-feature-card.beige    { background-color: rgba(245, 235, 221, 0.6); }
+.abode-feature-card.blue-soft { background-color: rgba(219, 234, 254, 0.5); }
 
 .abode-card-icon {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.6rem;
+  margin-bottom: 0.4rem;
 }
 
 .abode-card-title {
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   font-weight: 800;
 }
 
 .abode-card-subtitle {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 500;
   opacity: 0.85;
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 /* ── Stat Pills ────────────────────────────────────────────── */

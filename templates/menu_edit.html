@@ -14,17 +14,32 @@
     </div>
 </div>
 
-<div class="fade-in fade-in-2" style="max-width: 800px; margin: 0 auto;">
+<style>
+.menu-layout {
+    max-width: 1200px; 
+    margin: 0 auto; 
+    display: grid; 
+    grid-template-columns: 350px 1fr; 
+    gap: 2rem; 
+    align-items: start;
+}
+@media (max-width: 900px) {
+    .menu-layout {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+<div class="menu-layout fade-in fade-in-2">
 
     <!-- ── Left: Edit Form ─────────────────────────────────────────── -->
-    <div class="dash-section fade-in fade-in-2">
-        <div class="section-header">
-            <h3><i class="fas fa-utensils"></i> Update Meal</h3>
+    <div class="dash-section fade-in fade-in-2" style="border: 2px dashed var(--primary); border-radius: 30px; padding: 2rem 2.5rem; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); box-shadow: 0 15px 35px rgba(236,72,153,0.15);">
+        <div class="section-header" style="border-bottom: 2px dashed var(--primary-light); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+            <h3 style="color: var(--primary-dark);"><i class="fas fa-utensils"></i> Update Meal</h3>
         </div>
 
         <form method="POST" action="{{ url_for('menu.update_menu') }}" class="menu-edit-form">
             <div class="form-group">
-                <label for="day_id"><i class="fas fa-calendar-days"></i> Day</label>
+                <label for="day_id"><i class="fas fa-calendar-days" style="color: var(--abode-lavender);"></i> Day</label>
                 <select name="day_id" id="day_id" required onchange="prefillMenu()">
                     <option value="">— Select Day —</option>
                     {% for d in days %}
@@ -34,7 +49,7 @@
             </div>
 
             <div class="form-group">
-                <label for="meal_id"><i class="fas fa-bowl-food"></i> Meal</label>
+                <label for="meal_id"><i class="fas fa-bowl-food" style="color: var(--abode-mint);"></i> Meal</label>
                 <select name="meal_id" id="meal_id" required onchange="prefillMenu()">
                     <option value="">— Select Meal —</option>
                     {% for m in meals %}
@@ -44,13 +59,13 @@
             </div>
 
             <div class="form-group">
-                <label for="items"><i class="fas fa-list-ul"></i> Food Items</label>
+                <label for="items"><i class="fas fa-list-ul" style="color: var(--abode-pink);"></i> Food Items</label>
                 <textarea name="items" id="items" rows="4"
                     placeholder="e.g. Poha, Tea, Boiled Eggs" required></textarea>
             </div>
 
             <div class="form-group">
-                <label for="calories"><i class="fas fa-fire"></i> Calories (kcal)</label>
+                <label for="calories"><i class="fas fa-fire" style="color: var(--orange-text);"></i> Calories (kcal)</label>
                 <input type="number" name="calories" id="calories" min="0" placeholder="e.g. 450">
             </div>
 
@@ -58,7 +73,7 @@
                 <button type="reset" class="btn-outline" onclick="clearForm()">
                     <i class="fas fa-rotate-left"></i> Clear
                 </button>
-                <button type="submit" class="btn-primary">
+                <button type="submit" class="abode-btn-primary" style="background: var(--primary); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: transform 0.2s;">
                     <i class="fas fa-floppy-disk"></i> Save Menu
                 </button>
             </div>
@@ -66,7 +81,7 @@
     </div>
 
     <!-- ── Right: Current Menu Summary ────────────────────────────── -->
-    <div class="dash-section fade-in fade-in-3" style="overflow-x:auto; margin-top: 2rem;">
+    <div class="dash-section fade-in fade-in-3" style="overflow-x:auto;">
         <div class="section-header">
             <h3><i class="fas fa-table"></i> Current Menu Entries</h3>
             <a href="{{ url_for('menu.view_menu') }}" class="btn-outline btn-sm">
@@ -96,8 +111,8 @@
                         </td>
                         <td>
                             {% if row.calories %}
-                            <span style="color:var(--orange);font-weight:600;">{{ row.calories }}</span>
-                            {% else %}—{% endif %}
+                            <span style="color:var(--orange-text);font-weight:800;font-size:0.95rem;">{{ row.calories }}</span>
+                            {% else %}-{% endif %}
                         </td>
                         <td style="font-size:.78rem;color:var(--text-muted);">
                             {{ row.updated_at|datefmt('%d %b') if row.updated_at else '—' }}

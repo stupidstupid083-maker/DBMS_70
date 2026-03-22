@@ -4,98 +4,187 @@
 
 {% block content %}
 <style>
+    .chat-page {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+    }
+    .chat-glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 2px solid var(--glass-border);
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(236, 72, 153, 0.1);
+        display: flex;
+        flex-direction: column;
+        height: 75vh;
+    }
+    .chat-header {
+        padding: 1.2rem 1.5rem;
+        background: rgba(255, 255, 255, 0.9);
+        border-bottom: 2px dashed var(--abode-lavender);
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+    }
+    .chat-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--abode-pink) 0%, var(--abode-lavender) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-dark);
+        font-weight: 800;
+        font-size: 1.3rem;
+        box-shadow: 0 4px 10px rgba(236,72,153,0.2);
+    }
     .chat-container {
-        height: 60vh;
+        flex: 1;
         overflow-y: auto;
-        padding: 15px;
-        background: #e5ddd5; /* WhatsApp background */
-        border-radius: 10px 10px 0 0;
+        padding: 1.5rem;
+        background: transparent;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
     }
     .message-bubble {
         max-width: 75%;
-        padding: 10px 15px;
-        border-radius: 15px;
-        margin-bottom: 15px;
+        padding: 12px 18px;
+        border-radius: 20px;
         position: relative;
         word-wrap: break-word;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     }
     .message-sent {
-        background: #daf8cb; /* WhatsApp sent */
-        margin-left: auto;
-        border-bottom-right-radius: 0;
+        background: var(--primary);
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 4px;
     }
     .message-received {
         background: white;
-        margin-right: auto;
-        border-bottom-left-radius: 0;
+        color: var(--text);
+        border: 1.5px solid var(--border);
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
     }
     .message-time {
-        font-size: 0.65rem;
-        color: #999;
+        font-size: 0.7rem;
+        opacity: 0.85;
         display: block;
         margin-top: 5px;
         text-align: right;
     }
     .chat-input-area {
-        background: #f0f0f0;
-        padding: 15px;
-        border-radius: 0 0 10px 10px;
-        border-top: 1px solid #ccc;
+        padding: 1.2rem 1.5rem;
+        background: rgba(255, 255, 255, 0.9);
+        border-top: 1px solid var(--border);
+    }
+    .cute-chat-form {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+    }
+    .chat-input {
+        flex: 1;
+        padding: 14px 20px;
+        border-radius: 30px;
+        border: 2px solid var(--border);
+        font-family: inherit;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+        background: #fff;
+    }
+    .chat-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(236,72,153,0.1);
+    }
+    .chat-send-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 8px 20px rgba(236,72,153,0.3);
+    }
+    .chat-send-btn:hover {
+        transform: scale(1.05);
+        background: var(--primary-dark);
+    }
+    .sys-badge {
+        background: var(--abode-mint);
+        color: var(--text-2);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        align-self: center;
+        margin: 1rem 0;
+        border: 1.5px dashed #86efac;
     }
 </style>
 
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-                <!-- Chat Header -->
-                <div class="card-header bg-white py-3 d-flex align-items-center border-bottom">
-                    <a href="{{ url_for('roommate.matches') }}" class="btn btn-light btn-sm rounded-circle me-3">
-                        <i class="bi bi-arrow-left"></i>
-                    </a>
-                    <div class="text-white d-flex align-items-center justify-content-center fw-bold fs-5 rounded-circle me-3"
-                         style="width: 45px; height: 45px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                        {{ match_user.full_name.split(' ')[0][0] }}
-                    </div>
-                    <div>
-                        <h5 class="mb-0 fw-bold">{{ match_user.full_name }}</h5>
-                        <small class="text-muted">Mutual Match</small>
-                    </div>
-                </div>
-
-                <!-- Chat Body -->
-                <div class="chat-container d-flex flex-column" id="chat-container">
-                    <div class="text-center my-3">
-                        <span class="badge bg-secondary opacity-50 py-2 px-3 fw-normal rounded-pill">
-                            You both swiped right! Say hi! 👋
-                        </span>
-                    </div>
-                    
-                    {% for msg in messages %}
-                        {% if msg.sender_id == uid %}
-                            <div class="message-bubble message-sent shadow-sm">
-                                {{ msg.message }}
-                                <span class="message-time">{{ msg.created_at | datetimefmt('%I:%M %p') }}</span>
-                            </div>
-                        {% else %}
-                            <div class="message-bubble message-received shadow-sm">
-                                {{ msg.message }}
-                                <span class="message-time">{{ msg.created_at | datetimefmt('%I:%M %p') }}</span>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-
-                <!-- Chat Input -->
-                <div class="chat-input-area">
-                    <form method="POST" action="{{ url_for('roommate.send_message', match_id=match_user.id) }}" class="d-flex gap-2">
-                        <input type="text" name="message" class="form-control rounded-pill px-4" placeholder="Type a message..." required autocomplete="off" autofocus>
-                        <button type="submit" class="btn btn-primary rounded-circle" style="width: 45px; height: 45px;">
-                            <i class="bi bi-send-fill ms-1"></i>
-                        </button>
-                    </form>
-                </div>
+<div class="chat-page fade-in">
+    <div class="chat-glass-card">
+        <!-- Chat Header -->
+        <div class="chat-header">
+            <a href="{{ url_for('roommate.matches') }}" style="color:var(--text-3); font-size:1.4rem; padding: 0.5rem; transition:0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-3)'">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="chat-avatar">
+                {{ match_user.full_name.split(' ')[0][0] }}
             </div>
+            <div>
+                <div style="font-weight:800; color:var(--text); font-size:1.1rem;">{{ match_user.full_name }}</div>
+                <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">Mutual Match</div>
+            </div>
+        </div>
+
+        <!-- Chat Body -->
+        <div class="chat-container" id="chat-container">
+            <div class="sys-badge">
+                You both swiped right! Say hi! 👋
+            </div>
+            
+            {% for msg in messages %}
+                {% if msg.sender_id == uid %}
+                    <div class="message-bubble message-sent">
+                        {{ msg.message }}
+                        <span class="message-time">{{ msg.created_at | datetimefmt('%I:%M %p') }}</span>
+                    </div>
+                {% else %}
+                    <div class="message-bubble message-received">
+                        {{ msg.message }}
+                        <span class="message-time">{{ msg.created_at | datetimefmt('%I:%M %p') }}</span>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Chat Input -->
+        <div class="chat-input-area">
+            <form method="POST" action="{{ url_for('roommate.send_message', match_id=match_user.id) }}" class="cute-chat-form">
+                <input type="text" name="message" class="chat-input" placeholder="Type a message..." required autocomplete="off" autofocus>
+                <button type="submit" class="chat-send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
         </div>
     </div>
 </div>

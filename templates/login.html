@@ -2,99 +2,280 @@
 {% block title %}Login — Abode{% endblock %}
 {% block content %}
 
-{# Page transition overlay #}
-<div class="page-transition-overlay" id="pageOverlay"></div>
-
 <div class="abode-login-page">
-  {# Background decorative circles #}
-  <div class="abode-login-bg-circle abode-login-bg-circle-1"></div>
-  <div class="abode-login-bg-circle abode-login-bg-circle-2"></div>
+  <!-- Top Logo & Welcome -->
+  <div class="ref-login-header">
+    <div class="ref-bode-logo">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="#2563EB">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+      <span class="ref-bode-text">bode</span>
+    </div>
+    <h1 class="ref-welcome-title">Welcome to Abode</h1>
+    <p class="ref-welcome-subtitle">Where living finds its home.</p>
+  </div>
 
-  <div class="abode-login-card">
-    {# Logo #}
-    <div class="abode-login-logo">
-      <div class="abode-login-logo-icon">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-          <path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" fill="white"/>
-        </svg>
+  <div class="ref-login-card fade-in">
+    <h2 class="ref-card-title">Sign In</h2>
+    <p class="ref-card-subtitle">Enter your hostel credentials to continue</p>
+
+    <form method="POST" class="ref-login-form">
+      <div class="role-toggle-group">
+        <label class="role-label">
+          <input type="radio" name="role" value="student" {% if not role or role == 'student' %}checked{% endif %}>
+          <span class="role-chip">Student</span>
+        </label>
+        <label class="role-label">
+          <input type="radio" name="role" value="warden" {% if role == 'warden' %}checked{% endif %}>
+          <span class="role-chip">Warden</span>
+        </label>
       </div>
-      <span class="abode-login-brand-name">Aboard</span>
-    </div>
-    <p class="abode-login-tagline">"Where living finds its home" 🏠</p>
 
-    {# Role tabs #}
-    <div class="abode-role-tabs">
-      <a href="{{ url_for('auth.login', role='student') }}"
-         class="abode-role-tab {{ 'active' if role == 'student' else '' }}">
-        <i class="fas fa-user-graduate"></i> Student
-      </a>
-      <a href="{{ url_for('auth.login', role='warden') }}"
-         class="abode-role-tab {{ 'active' if role == 'warden' else '' }}">
-        <i class="fas fa-home"></i> Warden
-      </a>
-    </div>
-
-    {# Login form #}
-    <form method="POST" class="abode-login-form">
-      <input type="hidden" name="role" value="{{ role or 'student' }}">
-
-      <div class="abode-form-group">
-        <label><i class="fas fa-user"></i> Username / Reg. Number</label>
+      <div class="ref-input-group">
+        <label>Username</label>
         <input type="text" name="username" required
-               placeholder="Enter your username" autofocus
+               placeholder="e.g. student1 or warden1" autofocus
                autocomplete="username">
       </div>
 
-      <div class="abode-form-group">
-        <label><i class="fas fa-lock"></i> Password</label>
-        <input type="password" name="password" required
-               placeholder="Enter your password"
-               autocomplete="current-password">
+      <div class="ref-input-group">
+        <label>Password</label>
+        <div class="ref-input-icon-wrap">
+          <i class="fas fa-lock ref-icon"></i>
+          <input type="password" name="password" id="passwordInput" placeholder="••••••••" required>
+          <i class="fas fa-eye ref-eye" id="togglePassword" onclick="togglePasswordVisibility()" style="cursor: pointer;"></i>
+        </div>
       </div>
 
-      <button type="submit" class="abode-btn-primary">
-        <i class="fas fa-right-to-bracket"></i> Login
+      <button type="submit" class="ref-btn-primary">
+        <i class="fas fa-arrow-right-to-bracket"></i> Sign In
       </button>
     </form>
 
-    <a href="{{ url_for('auth.register') }}" class="abode-btn-secondary">
-      <i class="fas fa-user-plus"></i> Create Account
-    </a>
-
-    <div class="abode-login-footer">
-      New to Abode? <a href="{{ url_for('auth.register') }}">Register here</a>
-    </div>
-
-    <div class="abode-demo-box">
-      <strong>🎯 Demo Credentials</strong><br>
-      {% if role == 'warden' %}
-      Username: <code>warden_raj</code> &middot; Password: <code>Warden@123</code>
-      {% else %}
-      Username: <code>sanjana_gupta</code> &middot; Password: <code>Student@123</code>
-      {% endif %}
+    <div class="ref-demo-box">
+      <div class="ref-demo-row">
+        <i class="fas fa-user-graduate"></i> Student: sanjana_gupta / Student@123
+      </div>
+      <div class="ref-demo-row">
+        <i class="fas fa-shield-halved"></i> Warden: warden_raj / Warden@123
+      </div>
     </div>
   </div>
 </div>
 
-<style>
-/* Hide the outer landing wrapper for the login page */
-.landing { background: transparent !important; padding: 0 !important; }
-.landing .landing-nav { display: none !important; }
-</style>
-
 <script>
-// Fade in from the landing animation overlay
-window.addEventListener('DOMContentLoaded', function() {
-  const overlay = document.getElementById('pageOverlay');
-  if (overlay) {
-    overlay.style.opacity = '1';
-    overlay.style.pointerEvents = 'none';
-    setTimeout(function() {
-      overlay.style.transition = 'opacity 0.5s ease';
-      overlay.style.opacity = '0';
-    }, 50);
+function togglePasswordVisibility() {
+  const pwdInput = document.getElementById('passwordInput');
+  const toggleIcon = document.getElementById('togglePassword');
+  if (pwdInput.type === 'password') {
+    pwdInput.type = 'text';
+    toggleIcon.classList.remove('fa-eye');
+    toggleIcon.classList.add('fa-eye-slash');
+  } else {
+    pwdInput.type = 'password';
+    toggleIcon.classList.remove('fa-eye-slash');
+    toggleIcon.classList.add('fa-eye');
   }
-});
+}
 </script>
+<style>
+/* Hide Landing Nav Elements */
+.landing { background: #F8FAFC !important; padding: 0 !important; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+.landing .landing-nav { display: none !important; }
 
+.abode-login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 480px;
+  padding: 2rem 1rem;
+}
+
+.ref-login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.ref-bode-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.ref-bode-text {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #1A1A1A;
+  letter-spacing: -0.03em;
+}
+
+.ref-welcome-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.02em;
+}
+
+.ref-welcome-subtitle {
+  font-size: 1.1rem;
+  color: #64748B;
+  font-weight: 500;
+}
+
+.ref-login-card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  padding: 3rem 2.5rem;
+  width: 100%;
+  border: 1px solid #E2E8F0;
+}
+
+.ref-card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0F172A;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.ref-card-subtitle {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #64748B;
+  margin-bottom: 2rem;
+}
+
+.ref-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.ref-input-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0F172A;
+  margin-bottom: 0.5rem;
+}
+
+.ref-input-group input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #1A1A1A;
+  background: white;
+  transition: all 0.2s;
+}
+
+.ref-input-group input:focus {
+  outline: none;
+  border-color: #2563EB;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.ref-input-group input::placeholder {
+  color: #94A3B8;
+  font-weight: 400;
+}
+
+.ref-password-wrapper {
+  position: relative;
+}
+
+.ref-eye {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748B;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.ref-btn-primary {
+  background: #2563EB;
+  color: white;
+  font-size: 1.05rem;
+  font-weight: 600;
+  padding: 0.9rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+}
+
+.ref-btn-primary:hover {
+  background: #1D4ED8;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 10px rgba(37, 99, 235, 0.25);
+}
+
+.ref-btn-primary:active {
+  transform: scale(0.98);
+}
+
+.ref-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--primary-glow);
+}
+
+.role-toggle-group {
+  display: flex; gap: 10px; margin-bottom: 20px;
+}
+.role-label {
+  flex: 1; cursor: pointer; position: relative;
+}
+.role-label input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+.role-chip {
+  display: block; padding: 10px; text-align: center; border-radius: 14px;
+  font-weight: 700; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+  border: 2px solid var(--border);
+  color: var(--text-3); background: #fff;
+  font-size: 0.9rem;
+}
+.role-chip:hover {
+  background: var(--bg);
+}
+.role-label input:checked ~ .role-chip {
+  background: var(--primary); 
+  border-color: var(--primary); 
+  color: white;
+  box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+/* ── Demo Credentials ────────────────────────────────────────── */
+
+.ref-demo-box {
+  margin-top: 2rem;
+  background: #F8FAFC;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+}
+
+.ref-demo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: #334155;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+.ref-demo-row:last-child { margin-bottom: 0; }
+.ref-demo-row i { width: 16px; text-align: center; color: #1A1A1A; }
+</style>
 {% endblock %}
