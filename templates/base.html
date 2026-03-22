@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Abode{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/abode-animations.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+{% if session.user_id %}
+{# ========== AUTHENTICATED: Sidebar + Topbar ========== #}
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <div class="abode-brand-mark">
+            <div class="abode-logo-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" fill="white" opacity="0.9"/>
+                </svg>
+            </div>
+            <span class="abode-brand-text">Abode</span>
+        </div>
+    </div>
+    <nav class="sidebar-nav">
+        <span class="nav-section-label">Main</span>
+        {% if session.role == 'warden' %}
+            <a href="{{ url_for('warden.dashboard') }}"   class="sidebar-link {% if request.endpoint == 'warden.dashboard' %}active{% endif %}"><i class="fas fa-gauge-high"></i> Dashboard</a>
+            <a href="{{ url_for('warden.students') }}"    class="sidebar-link {% if request.endpoint == 'warden.students' %}active{% endif %}"><i class="fas fa-user-graduate"></i> Students</a>
+            <a href="{{ url_for('warden.student_profiles') }}" class="sidebar-link {% if request.endpoint == 'warden.student_profiles' %}active{% endif %}"><i class="fas fa-id-card"></i> Student Profiles</a>
+            <a href="{{ url_for('complaint.list_complaints') }}" class="sidebar-link {% if 'complaint' in (request.endpoint or '') %}active{% endif %}"><i class="fas fa-clipboard-list"></i> Complaints</a>
+            <a href="{{ url_for('leave.list_leaves') }}"  class="sidebar-link {% if 'leave' in (request.endpoint or '') %}active{% endif %}"><i class="fas fa-door-open"></i> Leave Requests</a>
+            <a href="{{ url_for('attendance.view') }}"    class="sidebar-link {% if 'attendance' in (request.endpoint or '') %}active{% endif %}"><i class="fas fa-calendar-check"></i> Attendance</a>
+            <span class="nav-section-label">Food &amp; Meals</span>
+            <a href="{{ url_for('food.view') }}"          class="sidebar-link {% if 'food' in (request.endpoint or '') %}active{% endif %}"><i class="fas fa-utensils"></i> Food Wastage</a>
+            <a href="{{ url_for('menu.edit_menu') }}"     class="sidebar-link {% if 'menu' in (request.endpoint or '') %}active{% endif %}"><i class="fas fa-calendar-week"></i> Manage Menu</a>
+            <span class="nav-section-label">More</span>
+            <a href="{{ url_for('emergency.view_contacts') }}" class="sidebar-link {% if 'emergency' in (request.endpoint or '') %}active{% endif %}"><i class="fas fa-phone-volume"></i> Emergency</a>
+            <a href="{{ url_for('notification.view') }}"  class="sidebar-link {% if 'notification' in (request.endpoint or '') %}active{% endif %}">
+                <i class="fas fa-bell"></i> Notifications
+                {% if unread_count > 0 %}<span class="nav-badge">{{ unread_count }}</span>{% endif %}
+            </a>
+        {% else %}
+            <a href="{{ url_for('student.dashboard') }}"  class="sidebar-link {% if request.endpoint == 'student.dashboard' %}active{% endif %}"><i class="fas fa-gauge-high"></i> Dashboard</a>
+            <a href="{{ url_for('roommate.swipe') }}"     class="sidebar-link {% if 'roommate' in (request.endpoint or '') %}active{% endif %}"><i class="fas fa-heart"></i> Roommates</a>
+            <a href="{{ url_for('complaint.list_complaints') }}" class="sidebar-link {% if 'complaint' in (request.endpoint or '') %}active{% endif %}"><i class="fas fa-clipboard-list"></i> Complaints</a>
+            <a href="{{ url_for('leave.list_leaves') }}"  class="sidebar-link {% if 'leave' in (request.endpoint or '') %}active{% endif %}"><i class="fas fa-door-open"></i> Leave</a>
+            <a href="{{ url_for('attendance.view') }}"    class="sidebar-link {% if 'attendance' in (request.endpoint or '') %}active{% endif %}"><i class="fas fa-calendar-check"></i> Attendance</a>
+            <a href="{{ url_for('menu.view_menu') }}"     class="sidebar-link {% if 'menu' in (request.endpoint or '') %}active{% endif %}"><i class="fas fa-calendar-week"></i> Weekly Menu</a>
+            <a href="{{ url_for('notification.view') }}"  class="sidebar-link {% if 'notification' in (request.endpoint or '') %}active{% endif %}">
+                <i class="fas fa-bell"></i> Notifications
+                {% if unread_count > 0 %}<span class="nav-badge">{{ unread_count }}</span>{% endif %}
+            </a>
+        {% endif %}
+    </nav>
+    <div class="sidebar-footer">
+        <div class="sidebar-user">
+            <div class="avatar">{{ (session.full_name or 'U')[:1].upper() }}</div>
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name">{{ session.full_name }}</div>
+                <div class="sidebar-user-role">{{ session.role }}</div>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<header class="topbar">
+    <button class="topbar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <span class="hb-bar"></span>
+        <span class="hb-bar"></span>
+        <span class="hb-bar"></span>
+    </button>
+    <div class="topbar-search">
+        <i class="fas fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search…" id="topSearch" autocomplete="off">
+    </div>
+    <div class="topbar-right">
+        <div class="notif-wrap" id="notifWrap">
+            <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+                <i class="fas fa-bell"></i>
+                {% if unread_count > 0 %}<span class="notif-dot"></span>{% endif %}
+            </button>
+            <div class="notif-dropdown" id="notifDropdown">
+                <div class="notif-header">
+                    <h4>Notifications{% if unread_count > 0 %} <span class="tag" style="font-size:.62rem;">{{ unread_count }} new</span>{% endif %}</h4>
+                    <a href="{{ url_for('notification.view') }}">View all</a>
+                </div>
+                <div class="notif-list">
+                    <div class="notif-empty"><i class="fas fa-bell-slash" style="display:block;font-size:1.4rem;margin-bottom:.4rem;opacity:.4;"></i>No new notifications</div>
+                </div>
+            </div>
+        </div>
+        <div class="profile-wrap" id="profileWrap">
+            <button class="profile-btn" id="profileBtn">
+                <div class="avatar sm">{{ (session.full_name or 'U')[:1].upper() }}</div>
+                <span class="profile-name">{{ (session.full_name or '').split()[0] }}</span>
+                <i class="fas fa-chevron-down" style="font-size:.6rem;color:var(--text-3);"></i>
+            </button>
+            <div class="profile-dropdown" id="profileDropdown">
+                <div style="padding:.75rem 1rem .35rem;">
+                    <div style="font-size:.82rem;font-weight:700;color:var(--text);">{{ session.full_name }}</div>
+                    <div style="font-size:.7rem;color:var(--text-3);text-transform:capitalize;">{{ session.role }}</div>
+                </div>
+                <div class="pd-divider"></div>
+                <a href="{{ url_for('student.dashboard') if session.role == 'student' else url_for('warden.dashboard') }}"><i class="fas fa-gauge-high"></i> Dashboard</a>
+                <div class="pd-divider"></div>
+                <a href="{{ url_for('auth.logout') }}" class="danger"><i class="fas fa-right-from-bracket"></i> Sign out</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="main" id="mainContent">
+    {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}
+    <div class="flash-container">{% for category, message in messages %}
+        <div class="alert alert-{{ category }}"><i class="fas fa-{% if category == 'success' %}circle-check{% elif category == 'danger' %}circle-exclamation{% elif category == 'warning' %}triangle-exclamation{% else %}circle-info{% endif %}"></i> {{ message }}</div>
+    {% endfor %}</div>{% endif %}{% endwith %}
+    <div class="page">
+
+{% else %}
+{# ========== UNAUTHENTICATED: Simple top nav ========== #}
+
+<div class="landing">
+    <nav class="landing-nav">
+        <div style="display:flex;align-items:center;gap:.6rem;">
+            <div class="abode-logo-icon" style="width:30px;height:30px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" fill="white"/></svg>
+            </div>
+            <span class="abode-brand-text" style="font-size:.95rem;">Abode</span>
+        </div>
+        <div style="display:flex;gap:.6rem;">
+            <a href="{{ url_for('auth.login', role='student') }}" class="btn btn-outline btn-sm"><i class="fas fa-user-graduate"></i> Student Login</a>
+            <a href="{{ url_for('auth.login', role='warden') }}"  class="btn btn-primary btn-sm"><i class="fas fa-home"></i> Warden Login</a>
+        </div>
+    </nav>
+    {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}
+    <div class="flash-container">{% for category, message in messages %}
+        <div class="alert alert-{{ category }}"><i class="fas fa-circle-info"></i> {{ message }}</div>
+    {% endfor %}</div>{% endif %}{% endwith %}
+
+{% endif %}
+
+{% block content %}{% endblock %}
+
+{% if session.user_id %}
+    </div>{# /page #}
+</main>
+{% else %}
+</div>{# /landing #}
+{% endif %}
+
+{% if session.user_id and session.role == 'student' %}
+    <!-- Student Bottom Navigation -->
+    <nav class="abode-bottom-nav">
+        <a href="{{ url_for('student.dashboard') }}" class="abode-nav-item {% if request.endpoint == 'student.dashboard' %}active{% endif %}">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="{{ url_for('roommate.swipe') }}" class="abode-nav-item {% if 'roommate' in (request.endpoint or '') %}active{% endif %}">
+            <i class="fas fa-heart"></i>
+            <span>Match</span>
+        </a>
+        <a href="{{ url_for('menu.view_menu') }}" class="abode-nav-item {% if 'menu' in (request.endpoint or '') %}active{% endif %}">
+            <i class="fas fa-utensils"></i>
+            <span>Menu</span>
+        </a>
+        <a href="{{ url_for('notification.view') }}" class="abode-nav-item {% if 'notification' in (request.endpoint or '') %}active{% endif %}">
+            <i class="fas fa-bell"></i>
+            <span>Alerts</span>
+        </a>
+    </nav>
+{% endif %}
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Welcome to Abode{% endblock %}
+{% block content %}
+
+<div class="abode-landing-page" id="landingPage">
+    <!-- Simple House Logo ('A' shape) -->
+    <div class="landing-house-svg bounce-in">
+        <svg width="220" height="220" viewBox="0 0 200 200" fill="none">
+            <!-- Roof -->
+            <path d="M100 20L180 90H20L100 20Z" fill="var(--abode-pink)" stroke="black" stroke-width="3"/>
+            <!-- Base -->
+            <rect x="30" y="90" width="140" height="90" rx="10" fill="white" stroke="black" stroke-width="3"/>
+            <!-- Door -->
+            <path d="M85 180V130C85 121.716 91.7157 115 100 115C108.284 115 115 121.716 115 130V180" fill="var(--abode-lavender)" stroke="black" stroke-width="3"/>
+        </svg>
+    </div>
+
+    <h1 class="landing-welcome-text bounce-in" style="animation-delay: 0.2s;">Welcome to Abode</h1>
+    <p class="landing-tagline bounce-in" style="animation-delay: 0.4s; font-size: 1.1rem; color: var(--abode-text-muted); font-weight: 500;">
+        Where living finds its home 🏡
+    </p>
+
+    <!-- Tap Hint -->
+    <div class="tap-hint bounce-in" style="animation-delay: 0.8s; margin-top: 3rem; font-size: 0.9rem; font-weight: 600; color: var(--abode-text-muted); opacity: 0.7;">
+        Entering Abode...
+    </div>
+</div>
+
+<style>
+/* Revert landing page overrides */
+body { background: white !important; }
+.landing { padding: 0 !important; }
+.landing-nav { display: none !important; }
+
+.landing-tagline {
+    font-family: 'Outfit', sans-serif;
+}
+</style>
+
+<script>
+    // Simple auto-transition to login
+    setTimeout(() => {
+        window.location.href = "{{ url_for('auth.login', role='student') }}";
+    }, 2800);
+</script>
+
+{% endblock %}

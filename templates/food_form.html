@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Log Food Wastage - SmartHostel{% endblock %}
+{% block content %}
+<div class="form-page">
+    <div class="form-card fade-in">
+        <h2><i class="fas fa-utensils"></i> Log Food Wastage</h2>
+        <form method="POST">
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-bowl-food"></i> Meal Type *</label>
+                    <select name="meal_type" required>
+                        <option value="breakfast">🌅 Breakfast</option>
+                        <option value="lunch">☀️ Lunch</option>
+                        <option value="dinner">🌙 Dinner</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-weight-scale"></i> Quantity (kg) *</label>
+                    <input type="number" name="quantity_kg" step="0.01" min="0" required placeholder="e.g. 5.50">
+                </div>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-calendar"></i> Date</label>
+                <input type="date" name="date" value="{{ today }}">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-sticky-note"></i> Notes</label>
+                <textarea name="notes" rows="3" placeholder="What was wasted? (optional)"></textarea>
+            </div>
+            <div class="form-actions">
+                <a href="{{ url_for('food.view') }}" class="btn-outline">Cancel</a>
+                <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Log Wastage</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

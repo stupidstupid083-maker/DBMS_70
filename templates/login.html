@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Login — Abode{% endblock %}
+{% block content %}
+
+{# Page transition overlay #}
+<div class="page-transition-overlay" id="pageOverlay"></div>
+
+<div class="abode-login-page">
+  {# Background decorative circles #}
+  <div class="abode-login-bg-circle abode-login-bg-circle-1"></div>
+  <div class="abode-login-bg-circle abode-login-bg-circle-2"></div>
+
+  <div class="abode-login-card">
+    {# Logo #}
+    <div class="abode-login-logo">
+      <div class="abode-login-logo-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+          <path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" fill="white"/>
+        </svg>
+      </div>
+      <span class="abode-login-brand-name">Aboard</span>
+    </div>
+    <p class="abode-login-tagline">"Where living finds its home" 🏠</p>
+
+    {# Role tabs #}
+    <div class="abode-role-tabs">
+      <a href="{{ url_for('auth.login', role='student') }}"
+         class="abode-role-tab {{ 'active' if role == 'student' else '' }}">
+        <i class="fas fa-user-graduate"></i> Student
+      </a>
+      <a href="{{ url_for('auth.login', role='warden') }}"
+         class="abode-role-tab {{ 'active' if role == 'warden' else '' }}">
+        <i class="fas fa-home"></i> Warden
+      </a>
+    </div>
+
+    {# Login form #}
+    <form method="POST" class="abode-login-form">
+      <input type="hidden" name="role" value="{{ role or 'student' }}">
+
+      <div class="abode-form-group">
+        <label><i class="fas fa-user"></i> Username / Reg. Number</label>
+        <input type="text" name="username" required
+               placeholder="Enter your username" autofocus
+               autocomplete="username">
+      </div>
+
+      <div class="abode-form-group">
+        <label><i class="fas fa-lock"></i> Password</label>
+        <input type="password" name="password" required
+               placeholder="Enter your password"
+               autocomplete="current-password">
+      </div>
+
+      <button type="submit" class="abode-btn-primary">
+        <i class="fas fa-right-to-bracket"></i> Login
+      </button>
+    </form>
+
+    <a href="{{ url_for('auth.register') }}" class="abode-btn-secondary">
+      <i class="fas fa-user-plus"></i> Create Account
+    </a>
+
+    <div class="abode-login-footer">
+      New to Abode? <a href="{{ url_for('auth.register') }}">Register here</a>
+    </div>
+
+    <div class="abode-demo-box">
+      <strong>🎯 Demo Credentials</strong><br>
+      {% if role == 'warden' %}
+      Username: <code>warden_raj</code> &middot; Password: <code>Warden@123</code>
+      {% else %}
+      Username: <code>sanjana_gupta</code> &middot; Password: <code>Student@123</code>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+/* Hide the outer landing wrapper for the login page */
+.landing { background: transparent !important; padding: 0 !important; }
+.landing .landing-nav { display: none !important; }
+</style>
+
+<script>
+// Fade in from the landing animation overlay
+window.addEventListener('DOMContentLoaded', function() {
+  const overlay = document.getElementById('pageOverlay');
+  if (overlay) {
+    overlay.style.opacity = '1';
+    overlay.style.pointerEvents = 'none';
+    setTimeout(function() {
+      overlay.style.transition = 'opacity 0.5s ease';
+      overlay.style.opacity = '0';
+    }, 50);
+  }
+});
+</script>
+
+{% endblock %}

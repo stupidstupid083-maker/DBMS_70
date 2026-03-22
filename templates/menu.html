@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}Today's Menu — Abode{% endblock %}
+
+{% block content %}
+<div class="abode-menu-page">
+  <div class="abode-menu-content">
+
+    {# Header #}
+    <div class="abode-menu-header fade-in">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <h1 style="font-size:1.75rem; font-weight:900; letter-spacing:-0.03em;">Today's Menu 🍽️</h1>
+          <p style="font-size:0.88rem; color:var(--abode-text-muted); margin-top:0.25rem; font-weight:500;">
+            Fresh, nutritious meals served every day 🌿
+          </p>
+        </div>
+        {% if session.role == 'warden' %}
+        <a href="{{ url_for('menu.edit_menu') }}" class="abode-btn abode-btn-primary">
+          <i class="fas fa-pen-to-square"></i> Edit Menu
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    {# ── Today's meal cards (top row) ── #}
+    <div class="abode-meal-cards">
+
+      {# Breakfast #}
+      <div class="abode-meal-card breakfast fade-in fade-in-1">
+        <span class="abode-meal-icon">☀️</span>
+        <div class="abode-meal-name">Breakfast</div>
+        {% for day, meals in weekly_menu.items() %}{% if loop.first %}
+          {% set b = meals.get('Breakfast', {}) %}
+          <div class="abode-meal-items">{{ b['items'] if b and b.get('items') != 'Not set' else 'Menu not available' }}</div>
+          {% if b and b.get('calories') %}<span class="abode-meal-cal">🔥 {{ b['calories'] }} kcal</span>{% endif %}
+        {% endif %}{% endfor %}
+      </div>
+
+      {# Lunch #}
+      <div class="abode-meal-card lunch fade-in fade-in-2">
+        <span class="abode-meal-icon">🌤️</span>
+        <div class="abode-meal-name">Lunch</div>
+        {% for day, meals in weekly_menu.items() %}{% if loop.first %}
+          {% set l = meals.get('Lunch', {}) %}
+          <div class="abode-meal-items">{{ l['items'] if l and l.get('items') != 'Not set' else 'Menu not available' }}</div>
+          {% if l and l.get('calories') %}<span class="abode-meal-cal">🔥 {{ l['calories'] }} kcal</span>{% endif %}
+        {% endif %}{% endfor %}
+      </div>
+
+      {# Snacks #}
+      <div class="abode-meal-card snacks fade-in fade-in-3">
+        <span class="abode-meal-icon">🍪</span>
+        <div class="abode-meal-name">Snacks</div>
+        {% for day, meals in weekly_menu.items() %}{% if loop.first %}
+          {% set s = meals.get('Snacks', {}) %}
+          <div class="abode-meal-items">{{ s['items'] if s and s.get('items') != 'Not set' else 'Menu not available' }}</div>
+          {% if s and s.get('calories') %}<span class="abode-meal-cal">🔥 {{ s['calories'] }} kcal</span>{% endif %}
+        {% endif %}{% endfor %}
+      </div>
+
+      {# Dinner #}
+      <div class="abode-meal-card dinner fade-in fade-in-4">
+        <span class="abode-meal-icon">🌙</span>
+        <div class="abode-meal-name">Dinner</div>
+        {% for day, meals in weekly_menu.items() %}{% if loop.first %}
+          {% set d = meals.get('Dinner', {}) %}
+          <div class="abode-meal-items">{{ d['items'] if d and d.get('items') != 'Not set' else 'Menu not available' }}</div>
+          {% if d and d.get('calories') %}<span class="abode-meal-cal">🔥 {{ d['calories'] }} kcal</span>{% endif %}
+        {% endif %}{% endfor %}
+      </div>
+    </div>
+
+
+    {# ── Full weekly menu table ── #}
+    <div style="margin-top:1.5rem; margin-bottom:1rem; position:relative; overflow:hidden;" class="fade-in">
+      <h2 style="font-size:1.15rem; font-weight:800; color:var(--abode-text); letter-spacing:-0.02em;">
+        📆 Weekly Schedule
+      </h2>
+
+      <!-- Stickers -->
+      <div class="menu-sticker" style="top: -10px; right: 10%; animation-delay: 0s;">🍕</div>
+      <div class="menu-sticker" style="top: 40px; left: 5%; animation-delay: 1s;">🥪</div>
+      <div class="menu-sticker" style="bottom: 10px; right: 5%; animation-delay: 2s;">🍛</div>
+    </div>
+
+    <div style="background:white; border:var(--abode-border); border-radius:20px; padding:1.5rem; box-shadow:var(--abode-shadow); overflow-x:auto;" class="fade-in fade-in-2">
+      <table class="abode-data-table" style="border-collapse: separate; border-spacing: 0;">
+        <thead>
+          <tr>
+            <th style="min-width:110px; border-bottom:var(--abode-border); padding:1rem;"><i class="fas fa-calendar-days"></i> Day</th>
+            {% for meal in meal_names %}
+            <th style="min-width:140px; border-bottom:var(--abode-border); padding:1rem;">
+              {% if meal == 'Breakfast' %}☀️
+              {% elif meal == 'Lunch' %}🌤️
+              {% elif meal == 'Snacks' %}🍪
+              {% elif meal == 'Dinner' %}🌙
+              {% endif %}
+              {{ meal }}
+            </th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for day in day_names %}
+          <tr>
+            <td style="font-weight:700; background:var(--abode-subtle); border-bottom:1px solid #eee; padding:1rem;">{{ day }}</td>
+            {% for meal in meal_names %}
+            {% set cell = weekly_menu.get(day, {}).get(meal, {}) %}
+            <td style="border-bottom:1px solid #eee; padding:1rem;">
+              {% if cell and cell['items'] != 'Not set' %}
+              <div style="font-size:0.88rem; font-weight:600; color:var(--abode-text); margin-bottom:0.25rem;">{{ cell['items'] }}</div>
+              {% if cell['calories'] %}
+              <div style="font-size:0.75rem; font-weight:700; color:var(--abode-text-muted);">
+                <span style="color:#F59E0B">🔥</span> {{ cell['calories'] }} kcal
+              </div>
+              {% endif %}
+              {% else %}
+              <span style="font-size:0.8rem; color:var(--abode-text-muted); opacity:0.5;">-</span>
+              {% endif %}
+            </td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>{# /abode-menu-content #}
+</div>{# /abode-menu-page #}
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Complaints - SmartHostel{% endblock %}
+{% block content %}
+<div class="page-header fade-in">
+    <div class="page-header-left">
+        <div class="breadcrumb"><i class="fas fa-clipboard-list"></i> Complaints</div>
+        <h1>{% if role == 'student' %}My Complaints{% else %}All Complaints{% endif %} 📋</h1>
+    </div>
+    {% if role == 'student' %}
+    <a href="{{ url_for('complaint.submit') }}" class="abode-btn abode-btn-primary"><i class="fas fa-plus"></i> New Complaint</a>
+    {% endif %}
+</div>
+
+{% if role == 'warden' %}
+{% if complaints %}
+<div class="table-wrapper fade-in">
+    <table class="data-table">
+        <thead>
+            <tr>
+                {% if role == 'warden' %}<th>Student</th>
+                <th>Room</th>{% endif %}
+                <th>Title</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Action</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in complaints %}
+            <tr>
+                {% if role == 'warden' %}
+                <td>{{ c.full_name }}</td>
+                <td>{{ c.room_number }}</td>
+                {% endif %}
+                <td>{{ c.title }}</td>
+                <td><span class="tag">{{ c.category }}</span></td>
+                <td>
+                    <span class="badge-status {{ 'green' if c.status == 'resolved' else 'yellow' if c.status in ['pending', 'in_progress', 'unresolved'] else 'red' }}">
+                        {{ c.status|replace('_', ' ')|title }}
+                    </span>
+                </td>
+                <td>
+                    {% if role == 'warden' %}
+                        {% if c.status != 'resolved' %}
+                        <form method="POST" action="{{ url_for('complaint.update_status', complaint_id=c.id) }}" class="inline-form">
+                            <select name="status" class="select-sm">
+                                <option value="pending" {{ 'selected' if c.status=='pending' }}>Pending</option>
+                                <option value="in_progress" {{ 'selected' if c.status=='in_progress' }}>In Progress</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                        </form>
+                        {% else %}
+                        <span class="text-success"><i class="fas fa-check-circle"></i> Resolved</span>
+                        {% endif %}
+                    {% else %}
+                        {% if c.status == 'in_progress' or c.status == 'unresolved' %}
+                        <form method="POST" action="{{ url_for('complaint.student_action', complaint_id=c.id) }}" style="display: flex; gap: 0.5rem;">
+                            <button type="submit" name="action" value="done" class="btn btn-green btn-sm"><i class="fas fa-check"></i> Done</button>
+                            <button type="submit" name="action" value="not_done" class="btn btn-red btn-sm"><i class="fas fa-times"></i> Not Done</button>
+                        </form>
+                        {% elif c.status == 'resolved' %}
+                        <span class="text-success"><i class="fas fa-check-circle"></i> Resolved</span>
+                        {% else %}
+                        <span class="text-muted"><i class="fas fa-hourglass-half"></i> Awaiting Action</span>
+                        {% endif %}
+                    {% endif %}
+                </td>
+                <td>{{ c.created_at|datefmt }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state fade-in">
+    <div class="empty-icon"><i class="fas fa-inbox" style="color:var(--text-muted)"></i></div>
+    <p>No complaints found.</p>
+</div>
+{% endif %}
+{% endblock %}

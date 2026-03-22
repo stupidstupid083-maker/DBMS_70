@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Leave Pass - SmartHostel{% endblock %}
+{% block content %}
+<div class="page-header fade-in">
+    <h2><i class="fas fa-door-open"></i> Leave Applications</h2>
+    {% if role == 'student' %}
+    <a href="{{ url_for('leave.apply') }}" class="btn-primary"><i class="fas fa-plus"></i> Apply for Leave</a>
+    {% endif %}
+</div>
+
+{% if leaves %}
+<div class="dash-section fade-in fade-in-1">
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    {% if role == 'warden' %}<th>Student</th>
+                    <th>Room</th>{% endif %}
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Reason</th>
+                    <th>Destination</th>
+                    <th>Status</th>
+                    {% if role == 'warden' %}<th>Action</th>{% endif %}
+                    {% if role == 'student' and leaves[0].warden_remarks is defined %}<th>Remarks</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for l in leaves %}
+                <tr>
+                    {% if role == 'warden' %}
+                    <td>{{ l.full_name }}</td>
+                    <td>{{ l.room_number }}</td>
+                    {% endif %}
+                    <td>{{ l.from_date }}</td>
+                    <td>{{ l.to_date }}</td>
+                    <td>{{ l.reason[:50] }}{% if l.reason|length > 50 %}...{% endif %}</td>
+                    <td>{{ l.destination or '-' }}</td>
+                    <td><span class="badge-status {{ l.status }}">{{ l.status }}</span></td>
+                    {% if role == 'warden' %}
+                    <td>
+                        {% if l.status == 'pending' %}
+                        <form method="POST" action="{{ url_for('leave.action', leave_id=l.id) }}" class="inline-form">
+                            <input type="text" name="remarks" class="input-sm" placeholder="Remarks">
+                            <button type="submit" name="decision" value="approved" class="btn-green btn-sm"><i
+                                    class="fas fa-check"></i></button>
+                            <button type="submit" name="decision" value="rejected" class="btn-red btn-sm"><i
+                                    class="fas fa-xmark"></i></button>
+                        </form>
+                        {% else %}
+                        <span class="text-muted">—</span>
+                        {% endif %}
+                    </td>
+                    {% endif %}
+                    {% if role == 'student' and l.warden_remarks is defined %}
+                    <td>{{ l.warden_remarks or '-' }}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="empty-state fade-in">
+    <div class="empty-icon"><i class="fas fa-inbox" style="color:var(--text-muted)"></i></div>
+    <p>No leave applications found.</p>
+</div>
+{% endif %}
+{% endblock %}

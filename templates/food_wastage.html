@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Food Wastage - SmartHostel{% endblock %}
+{% block content %}
+<div class="page-header fade-in">
+    <h2><i class="fas fa-utensils"></i> Food Wastage Tracker</h2>
+    {% if role == 'warden' %}
+    <a href="{{ url_for('food.log') }}" class="btn-primary"><i class="fas fa-plus"></i> Log Wastage</a>
+    {% endif %}
+</div>
+
+<div class="stats-grid" style="margin-bottom:1.5rem">
+    <div class="stat-card orange fade-in fade-in-1">
+        <div class="stat-icon"><i class="fas fa-utensils" style="color:var(--orange)"></i></div>
+        <div class="stat-info">
+            <div class="stat-big">{{ "%.1f"|format(today_total) }} kg</div>
+            <div class="stat-label">Wasted Today</div>
+        </div>
+    </div>
+</div>
+
+{% if weekly %}
+<div class="dash-section fade-in fade-in-2" style="margin-bottom:1.5rem">
+    <h3><i class="fas fa-chart-bar"></i> Weekly Summary</h3>
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Total Wastage (kg)</th>
+                    <th>Level</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for w in weekly %}
+                <tr>
+                    <td>{{ w.date }}</td>
+                    <td>{{ "%.2f"|format(w.total_kg) }}</td>
+                    <td>
+                        {% if w.total_kg > 20 %}<span class="badge-status rejected"><i class="fas fa-arrow-up"></i>
+                            High</span>
+                        {% elif w.total_kg > 10 %}<span class="badge-status pending"><i class="fas fa-minus"></i>
+                            Medium</span>
+                        {% else %}<span class="badge-status approved"><i class="fas fa-arrow-down"></i> Low</span>{%
+                        endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<div class="dash-section fade-in fade-in-3">
+    <h3><i class="fas fa-list"></i> Detailed Records</h3>
+    {% if records %}
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Meal</th>
+                    <th>Qty (kg)</th>
+                    <th>Notes</th>
+                    <th>Logged By</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in records %}
+                <tr>
+                    <td>{{ r.date }}</td>
+                    <td><span class="tag">{{ r.meal_type }}</span></td>
+                    <td>{{ "%.2f"|format(r.quantity_kg) }}</td>
+                    <td>{{ r.notes or '-' }}</td>
+                    <td>{{ r.logged_by_name or '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon"><i class="fas fa-inbox" style="color:var(--text-muted)"></i></div>
+        <p>No food wastage records yet.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

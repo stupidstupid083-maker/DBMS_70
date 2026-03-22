@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block title %}Warden Dashboard — SmartHostel{% endblock %}
+{% block content %}
+
+<div class="page-header fade-in">
+    <div class="page-header-left">
+        <div class="breadcrumb"><i class="fas fa-gauge-high"></i> Dashboard</div>
+        <h1>Warden Dashboard 🏢</h1>
+        <p>Welcome back, {{ session.full_name }}. Here's your hostel overview.</p>
+    </div>
+    <div class="page-header-right">
+        <a href="{{ url_for('notification.send') }}"     class="abode-btn abode-btn-outline"><i class="fas fa-bell"></i> Notify Students</a>
+        <a href="{{ url_for('attendance.view') }}"       class="abode-btn abode-btn-primary"><i class="fas fa-calendar-check"></i> Mark Attendance</a>
+    </div>
+</div>
+
+<!-- Stats -->
+<div class="stats-grid">
+    <div class="stat-card blue fade-in fade-in-1">
+        <div class="stat-icon-wrap"><i class="fas fa-user-graduate"></i></div>
+        <div class="stat-body">
+            <div class="stat-label">Total Students</div>
+            <div class="stat-value" data-count="{{ total_students }}">{{ total_students }}</div>
+            <div class="stat-sub">Registered in system</div>
+        </div>
+    </div>
+    <div class="stat-card orange fade-in fade-in-2">
+        <div class="stat-icon-wrap"><i class="fas fa-clipboard-list"></i></div>
+        <div class="stat-body">
+            <div class="stat-label">Pending Complaints</div>
+            <div class="stat-value" data-count="{{ pending_complaints }}">{{ pending_complaints }}</div>
+            <div class="stat-sub">Awaiting action</div>
+        </div>
+    </div>
+    <div class="stat-card purple fade-in fade-in-3">
+        <div class="stat-icon-wrap"><i class="fas fa-door-open"></i></div>
+        <div class="stat-body">
+            <div class="stat-label">Leave Requests</div>
+            <div class="stat-value" data-count="{{ pending_leaves }}">{{ pending_leaves }}</div>
+            <div class="stat-sub">Pending approval</div>
+        </div>
+    </div>
+    <div class="stat-card red fade-in fade-in-4">
+        <div class="stat-icon-wrap"><i class="fas fa-utensils"></i></div>
+        <div class="stat-body">
+            <div class="stat-label">Food Wasted Today</div>
+            <div class="stat-value" data-count="{{ '%.1f'|format(food_today) }}" data-suffix=" kg">{{ "%.1f"|format(food_today) }}<small style="font-size:.9rem;font-weight:500;"> kg</small></div>
+            <div class="stat-sub">Tracked wastage</div>
+        </div>
+    </div>
+</div>
+
+<!-- Grid -->
+<div class="dash-grid">
+
+    <!-- Attendance -->
+    <div class="card fade-in fade-in-1">
+        <div class="card-header">
+            <h3><i class="fas fa-calendar-check"></i> Today's Attendance</h3>
+            <a href="{{ url_for('attendance.view') }}" class="abode-btn abode-btn-primary"><i class="fas fa-check-double"></i> Mark Now</a>
+        </div>
+        <div class="card-body">
+            <div class="mini-stats">
+                <div class="mini-stat green"><i class="fas fa-check"></i> Present: {{ attendance_today.present_count or 0 }}</div>
+                <div class="mini-stat red"><i class="fas fa-xmark"></i> Absent: {{ attendance_today.absent_count or 0 }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card fade-in fade-in-2">
+        <div class="card-header">
+            <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+        </div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:.6rem;">
+            <a href="{{ url_for('notification.send') }}" class="abode-btn abode-btn-outline" style="width:100%"><i class="fas fa-bell"></i> Send Notification</a>
+            <a href="{{ url_for('menu.edit_menu') }}" class="abode-btn abode-btn-action" style="width:100%">
+                <i class="fas fa-calendar-week"></i> ✏️ Update Menu
+            </a>
+            <a href="{{ url_for('food.view') }}" class="abode-btn abode-btn-outline" style="width:100%"><i class="fas fa-utensils"></i> Log Food Wastage</a>
+            <a href="{{ url_for('emergency.view_contacts') }}" class="abode-btn abode-btn-outline" style="width:100%"><i class="fas fa-phone-volume"></i> Emergency Contacts</a>
+        </div>
+    </div>
+
+
+    <!-- Recent Complaints -->
+    <div class="card wide fade-in fade-in-3">
+        <div class="card-header">
+            <h3><i class="fas fa-clipboard-list"></i> Recent Complaints</h3>
+            <a href="{{ url_for('complaint.list_complaints') }}" class="btn btn-ghost btn-sm">View all <i class="fas fa-arrow-right"></i></a>
+        </div>
+        {% if complaints %}
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead><tr><th>Student</th><th>Title</th><th>Room</th><th>Category</th><th>Status</th><th>Action</th></tr></thead>
+                <tbody>
+                {% for c in complaints %}
+                <tr>
+                    <td>{{ c.full_name }}</td>
+                    <td>{{ c.title }}</td>
+                    <td>{{ c.room_number }}</td>
+                    <td><span class="tag">{{ c.category }}</span></td>
+                    <td>
+                        <span class="badge-status {{ 'green' if c.status == 'resolved' else 'yellow' if c.status == 'in_progress' else 'red' }}">
+                            {{ c.status|replace('_',' ')|title }}
+                        </span>
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ url_for('complaint.update_status', complaint_id=c.id) }}" class="inline-form">
+                            <select name="status" class="select-sm">
+                                <option value="pending"     {{ 'selected' if c.status == 'pending' }}>Pending</option>
+                                <option value="in_progress" {{ 'selected' if c.status == 'in_progress' }}>In Progress</option>
+                                <option value="resolved"    {{ 'selected' if c.status == 'resolved' }}>Resolved</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state"><i class="fas fa-clipboard-check"></i><p>No complaints — everything looks great!</p></div>
+        {% endif %}
+    </div>
+
+    <!-- Pending Leave Requests -->
+    <div class="card wide fade-in fade-in-4">
+        <div class="card-header">
+            <h3><i class="fas fa-door-open"></i> Pending Leave Requests</h3>
+            <a href="{{ url_for('leave.list_leaves') }}" class="btn btn-ghost btn-sm">View all <i class="fas fa-arrow-right"></i></a>
+        </div>
+        {% if leaves %}
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead><tr><th>Student</th><th>From</th><th>To</th><th>Reason</th><th>Action</th></tr></thead>
+                <tbody>
+                {% for l in leaves %}
+                <tr>
+                    <td>{{ l.full_name }}</td>
+                    <td>{{ l.from_date }}</td>
+                    <td>{{ l.to_date }}</td>
+                    <td>{{ l.reason }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('leave.action', leave_id=l.id) }}" class="inline-form">
+                            <button type="submit" name="decision" value="approved" class="btn btn-green btn-sm">Approve</button>
+                            <button type="submit" name="decision" value="rejected" class="btn btn-red btn-sm">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state"><i class="fas fa-plane-departure"></i><p>No pending leave requests.</p></div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

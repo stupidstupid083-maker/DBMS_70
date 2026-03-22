@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Register - SmartHostel{% endblock %}
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card auth-card-wide fade-in">
+        <div class="auth-header">
+            <div class="auth-icon"><i class="fas fa-user-plus" style="color:var(--accent)"></i></div>
+            <h2>Create Account</h2>
+            <p>Join the Smart Hostel Management System</p>
+        </div>
+
+        <form method="POST" class="auth-form">
+            <div class="form-group">
+                <label>Role</label>
+                <select name="role" id="roleSelect" onchange="toggleRoleFields()">
+                    <option value="student">🎓 Student</option>
+                    <option value="warden">🛡️ Warden</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Full Name *</label>
+                    <input type="text" name="full_name" required placeholder="Your full name">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-at"></i> Username *</label>
+                    <input type="text" name="username" required placeholder="Choose a username">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email *</label>
+                    <input type="email" name="email" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password *</label>
+                    <input type="password" name="password" required placeholder="Min 6 characters">
+                </div>
+            </div>
+
+            <div id="studentFields">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-id-card"></i> Roll Number</label>
+                        <input type="text" name="roll_number" placeholder="e.g. CS2021001">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-graduation-cap"></i> Course</label>
+                        <input type="text" name="course" placeholder="e.g. B.Tech CSE">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-bed"></i> Room Number</label>
+                        <input type="text" name="room_number" placeholder="e.g. A-101">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Phone</label>
+                        <input type="text" name="phone" placeholder="10-digit number">
+                    </div>
+                </div>
+            </div>
+
+            <div id="wardenFields" style="display:none">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-id-badge"></i> Employee ID</label>
+                        <input type="text" name="employee_id" placeholder="e.g. EMP001">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-building"></i> Department</label>
+                        <input type="text" name="department" placeholder="e.g. Administration">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Phone</label>
+                    <input type="text" name="phone" placeholder="10-digit number">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary btn-full btn-lg">
+                <i class="fas fa-user-check"></i> Create Account
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            Already have an account? <a href="{{ url_for('auth.login') }}">Login here</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

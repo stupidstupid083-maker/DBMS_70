@@ -1,0 +1,236 @@
+/* ============================================================
+   ABODE — UI System (Neo-Brutalism Pastel)
+   Inspired by the reference design (Outfit font, soft pastels, thick borders)
+   ============================================================ */
+
+:root {
+  --abode-pink:     #F9A8D4;
+  --abode-mint:     #86EFAC;
+  --abode-lavender: #C084FC;
+  --abode-beige:    #FDE68A;
+  --abode-blue-soft: #93C5FD;
+  
+  --abode-bg:       #FFFFFF;
+  --abode-text:     #1A1A1A;
+  --abode-text-muted: #8A7A9A;
+  --abode-border:   2px solid #1A1A1A;
+  --abode-shadow:   4px 4px 0px rgba(0,0,0,0.1);
+  --abode-shadow-active: 2px 2px 0px rgba(0,0,0,0.15);
+}
+
+/* ── Global Typography ─────────────────────────────────────── */
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--abode-bg);
+  color: var(--abode-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* ── Neo-Brutalism Cards ───────────────────────────────────── */
+.abode-feature-card {
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: var(--abode-border);
+  box-shadow: var(--abode-shadow);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.abode-feature-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px rgba(0,0,0,0.12);
+}
+
+.abode-feature-card.pink     { background-color: var(--abode-pink); }
+.abode-feature-card.mint     { background-color: var(--abode-mint); }
+.abode-feature-card.lavender { background-color: var(--abode-lavender); }
+.abode-feature-card.beige    { background-color: var(--abode-beige); }
+.abode-feature-card.blue-soft { background-color: var(--abode-blue-soft); }
+
+.abode-card-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.abode-card-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.abode-card-subtitle {
+  font-size: 0.85rem;
+  font-weight: 500;
+  opacity: 0.85;
+  line-height: 1.4;
+}
+
+/* ── Stat Pills ────────────────────────────────────────────── */
+.abode-stats-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.abode-stat-pill {
+  flex: 1;
+  min-width: 140px;
+  background: white;
+  border: var(--abode-border);
+  border-radius: 100px;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: var(--abode-shadow);
+}
+
+.abode-stat-pill-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.abode-stat-pill-icon.pink     { background: var(--abode-pink); }
+.abode-stat-pill-icon.mint     { background: var(--abode-mint); }
+.abode-stat-pill-icon.lavender { background: var(--abode-lavender); }
+.abode-stat-pill-icon.beige    { background: var(--abode-beige); }
+
+/* ── Buttons ───────────────────────────────────────────────── */
+.abode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  border: var(--abode-border);
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.15s;
+  box-shadow: var(--abode-shadow);
+  text-decoration: none;
+  cursor: pointer;
+  background: white;
+  color: var(--abode-text);
+}
+
+.abode-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: var(--abode-shadow-active);
+}
+
+.abode-btn-primary {
+  background: var(--abode-lavender);
+}
+
+.abode-btn-outline {
+  background: white;
+}
+
+.abode-btn-action {
+  background: var(--abode-beige);
+}
+
+/* ── Bottom Navigation (Student) ───────────────────────────── */
+.abode-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: white;
+  border-top: var(--abode-border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 1rem;
+  z-index: 1000;
+  box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+}
+
+.abode-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: var(--abode-text-muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.abode-nav-item.active {
+  color: var(--abode-lavender);
+}
+
+.abode-nav-item i {
+  font-size: 1.25rem;
+}
+
+/* ── Animations ────────────────────────────────────────────── */
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); opacity: 1; }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+.bounce-in {
+  animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ── Landing Page (Revert) ─────────────────────────────────── */
+.abode-landing-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+.landing-house-svg {
+  width: 280px;
+  height: auto;
+  margin-bottom: 2rem;
+  animation: bounceIn 1s;
+}
+
+.landing-welcome-text {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+}
+
+/* ── Stickers (Menu Page) ─────────────────────────────────── */
+.menu-sticker {
+  position: absolute;
+  font-size: 2.5rem;
+  z-index: 1;
+  opacity: 0.15;
+  pointer-events: none;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
