@@ -1,4 +1,4 @@
-# Smart Hostel Management System (SHMM)
+# ABODE
 
 A complete digital hostel management solution built with **Flask**, **MySQL**, and **HTML/CSS/JavaScript**.
 
