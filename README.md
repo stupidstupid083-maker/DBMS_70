@@ -62,7 +62,7 @@ Open http://localhost:5000 in your browser.
 | Role | Username | Password |
 |------|----------|----------|
 | **Warden** | `warden_raj` | `Warden@123` |
-| **Student** | `student_aman` | `Student@123` |
+| **Student** | `anika_bisht` | `Student@123` |
 
 ## Project Structure
 
