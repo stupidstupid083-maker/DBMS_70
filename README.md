@@ -4,6 +4,7 @@ A complete digital hostel management solution built with **Flask**, **MySQL**, a
 
 # Project Members
 1.Anika Singh Bisht-RA2411030030069
+
 2.Palak Behune-RA2411030030070
 
 ## 📁 Project Documents
