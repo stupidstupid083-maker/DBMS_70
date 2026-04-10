@@ -1,6 +1,24 @@
-# ABODE
+# ABODE-Smart Hostel System 
 
 A complete digital hostel management solution built with **Flask**, **MySQL**, and **HTML/CSS/JavaScript**.
+
+# Project Members
+1.Anika Singh Bisht-RA2411030030069
+2.Palak Behune-RA2411030030070
+
+## 📁 Project Documents
+
+| Sr | Description                                  | Link |
+|----|----------------------------------------------|------|
+| 1  | Project Code                                | [View](#) |
+| 2  | Project Report                              | [View](#) |
+| 3  | Final PPT                                   | [View](#) |
+| 4  | RA2411030030069_Certificate                 | [View](#) |
+| 5  | RA2411030030070_Certificate                 | [View](#) |
+| 6  | RA2411030030069_CourseReport                | [View](#) |
+| 7  | RA2411030030070_CourseReport                | [View](#) |
+
+
 
 ## Features
 
